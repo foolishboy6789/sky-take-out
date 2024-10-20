@@ -1,5 +1,6 @@
 package com.sky.handler;
 
+import com.sky.constant.MessageConstant;
 import com.sky.exception.BaseException;
 import com.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public Result exceptionHandler(DuplicateKeyException ex){
-        log.error("异常信息：{}", ex.getMessage());
-        return Result.error(ex.getMessage());
+    public Result duplicateKeyExceptionHandler(DuplicateKeyException ex) throws BaseException{
+        log.error("字段重复,{}",ex.getCause().getMessage());
+        return Result.error(ex.getCause().getMessage().split(" ")[2]+
+                MessageConstant.AlREADY_EXISTS);
     }
 
 }
