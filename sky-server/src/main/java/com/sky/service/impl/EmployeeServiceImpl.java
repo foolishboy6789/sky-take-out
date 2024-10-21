@@ -9,20 +9,24 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
+import com.sky.exception.PasswordEditFailedException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import com.sky.utils.JwtUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -60,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (employee.getStatus() == StatusConstant.DISABLE) {
+        if (Objects.equals(employee.getStatus(), StatusConstant.DISABLE)) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
@@ -77,12 +81,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.addEmployee(employee);
     }
 
@@ -111,9 +109,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void updateEmp(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+
         employeeMapper.update(employee);
     }
+
+    @Override
+    public void editPassword(PasswordEditDTO passwordEditDTO) {
+        if(passwordEditDTO.getEmpId()==null)
+            passwordEditDTO.setEmpId(BaseContext.getCurrentId());
+        String md5OldPwd = DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes());
+        String md5NewPwd = DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes());
+        String Pwd = employeeMapper.getPwdById(passwordEditDTO.getEmpId());
+        if(!Pwd.equals(md5OldPwd)){
+            throw new PasswordEditFailedException(MessageConstant.PASSWORD_EDIT_FAILED);
+        }
+        if(Pwd.equals(md5NewPwd)){
+            throw new PasswordEditFailedException(MessageConstant.PASSWORD_MULTI);
+        }
+        Employee emp = Employee.builder()
+                               .id(passwordEditDTO.getEmpId())
+                               .password(md5NewPwd).build();
+
+        employeeMapper.update(emp);
+    }
+
 
 }
