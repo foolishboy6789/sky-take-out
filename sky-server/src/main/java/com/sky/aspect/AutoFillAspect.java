@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
@@ -24,7 +25,7 @@ public class AutoFillAspect {
     }
 
     @Before("AutoFillPt()")
-    public void AutoFill(JoinPoint joinPoint) throws Exception {
+    public void AutoFill(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         AutoFill autoFill = methodSignature.getMethod().getAnnotation(AutoFill.class);
         OperationType opt = autoFill.value();
@@ -32,18 +33,22 @@ public class AutoFillAspect {
         Object[] args = joinPoint.getArgs();
         if(args==null||args.length==0)return;
         Object entity = args[0];
-        Method creatTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
-        Method updateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
-        Method creatUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
-        Method updateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
-        if(opt==OperationType.INSERT){
-            creatTime.invoke(entity,LocalDateTime.now());
-            updateTime.invoke(entity,LocalDateTime.now());
-            creatUser.invoke(entity, BaseContext.getCurrentId());
-            updateUser.invoke(entity,BaseContext.getCurrentId());
-        }else if(opt == OperationType.UPDATE){
-            updateTime.invoke(entity,LocalDateTime.now());
-            updateUser.invoke(entity,BaseContext.getCurrentId());
+        try {
+            Method creatTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
+            Method updateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+            Method creatUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
+            Method updateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
+            if(opt==OperationType.INSERT){
+                creatTime.invoke(entity,LocalDateTime.now());
+                updateTime.invoke(entity,LocalDateTime.now());
+                creatUser.invoke(entity, BaseContext.getCurrentId());
+                updateUser.invoke(entity,BaseContext.getCurrentId());
+            }else if(opt == OperationType.UPDATE){
+                updateTime.invoke(entity,LocalDateTime.now());
+                updateUser.invoke(entity,BaseContext.getCurrentId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
