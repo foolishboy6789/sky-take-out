@@ -4,4 +4,10 @@
 <mapper namespace="com.sky.mapper.DishFlavorMapper">
 
     <update id="update"></update>
+    <delete id="deleteDishFlavorByDishIds">
+        delete from dish_flavor where dish_id in
+        <foreach collection="ids" item="dishId" open="(" separator="," close=")">
+            #{dishId}
+        </foreach>
+    </delete>
 </mapper>

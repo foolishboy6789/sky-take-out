@@ -77,13 +77,21 @@ public class DishServiceImpl implements DishService {
             if (Objects.equals(dish.getStatus(), StatusConstant.ENABLE)) {
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
-            if (setmealDishMapper.getSetmealIdByDishId(id) != null) {
-                throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
-            }
         }
-        for (Long id : ids) {
-            dishMapper.deleteDishById(id);
-            dishFlavorMapper.deleteDishFlavorByDishId(id);
+        if (setmealDishMapper.getSetmealIdByDishIds(ids) != null && !setmealDishMapper.getSetmealIdByDishIds(ids).isEmpty()) {
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
+
+        dishMapper.deleteDishByIds(ids);
+        dishFlavorMapper.deleteDishFlavorByDishIds(ids);
+    }
+
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
     }
 }

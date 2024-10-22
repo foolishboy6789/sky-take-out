@@ -34,7 +34,7 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
-    public Result<DishVO> getDishById(@PathVariable Long id) {
+    public Result<DishVO> getDishWithFlavorById(@PathVariable Long id) {
         log.info("根据id查询菜品信息:{}", id);
         DishVO dishVO = dishService.getDishWithFlavorById(id);
         return Result.success(dishVO);
@@ -44,6 +44,13 @@ public class DishController {
     public Result<String> deleteDishByIds(@RequestParam List<Long> ids) {
         log.info("批量删除菜品:{}", ids);
         dishService.deleteDishByIds(ids);
+        return Result.success();
+    }
+
+    @PostMapping("/status/{status}")
+    public Result<String> startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用或禁用菜品:{},{}", status, id);
+        dishService.startOrStop(status, id);
         return Result.success();
     }
 }
