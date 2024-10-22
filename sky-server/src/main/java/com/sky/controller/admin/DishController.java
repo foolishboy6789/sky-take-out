@@ -53,4 +53,11 @@ public class DishController {
         dishService.startOrStop(status, id);
         return Result.success();
     }
+
+    @PutMapping
+    public Result<String> updateDishWithFlavor(@RequestBody DishDTO dishDTO) {
+        log.info("修改菜品:{}", dishDTO);
+        dishService.updateDishWithFlavor(dishDTO);
+        return Result.success("修改菜品成功");
+    }
 }
