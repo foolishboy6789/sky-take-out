@@ -5,10 +5,8 @@ import com.sky.annotation.AutoFill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import com.sky.vo.DishVO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -18,13 +16,21 @@ public interface DishMapper {
     @Select("select count(id) from dish where category_id=#{id}")
     Integer countByCategoryId(Long id);
 
-    List<Dish> getDishPage(DishPageQueryDTO dishPageQueryDTO);
+    List<DishVO> getDishPage(DishPageQueryDTO dishPageQueryDTO);
 
- 
+
     @Insert("insert into dish(category_id,name,price,image,description,status,create_time,update_time,create_user,update_user)" +
             " values (#{categoryId},#{name},#{price},#{image},#{description},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})")
     @AutoFill(OperationType.INSERT)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addDish(Dish dish);
 
+    @Select("select * from dish where id=#{id}")
+    Dish getDishById(Long id);
+
+    @AutoFill(OperationType.UPDATE)
+    void update(Dish dish);
+
+    @Delete("delete from dish where id=#{id}")
+    void deleteDishById(Long id);
 }
