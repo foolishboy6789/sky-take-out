@@ -20,41 +20,41 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/page")
-    public Result<PageResult> getCategoryPage(CategoryPageQueryDTO categoryPageQueryDTO){
-        log.info("查询菜品分类页面,{}",categoryPageQueryDTO);
+    public Result<PageResult> getCategoryPage(CategoryPageQueryDTO categoryPageQueryDTO) {
+        log.info("查询菜品分类页面,{}", categoryPageQueryDTO);
         return Result.success(categoryService.getCategoryPage(categoryPageQueryDTO));
     }
 
     @GetMapping("/list")
-    public Result<List<Category>> getCategoryList(String type){
-        log.info("根据类型查询菜品分类,{}",type);
+    public Result<List<Category>> getCategoryList(String type) {
+        log.info("根据类型查询菜品分类,{}", type);
         return Result.success(categoryService.getCategoryList(type));
     }
 
     @PostMapping("/status/{status}")
-    public Result<String> startOrStop(@PathVariable Integer status,Long id){
-        log.info("启用或禁用分类,{},{}",status,id);
-        categoryService.startOrStop(status,id);
+    public Result<String> startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用或禁用分类,{},{}", status, id);
+        categoryService.startOrStop(status, id);
         return Result.success();
     }
 
     @PostMapping
-    public Result<String> addCategory(@RequestBody CategoryDTO categoryDTO){
-        log.info("添加分类,{}",categoryDTO);
+    public Result<String> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        log.info("添加分类,{}", categoryDTO);
         categoryService.addCategory(categoryDTO);
         return Result.success();
     }
 
     @PutMapping
-    public Result<String> updateCategory(@RequestBody CategoryDTO categoryDTO){
-        log.info("修改分类,{}",categoryDTO);
+    public Result<String> updateCategory(@RequestBody CategoryDTO categoryDTO) {
+        log.info("修改分类,{}", categoryDTO);
         categoryService.updateCategory(categoryDTO);
         return Result.success();
     }
 
     @DeleteMapping
-    public Result<String> deleteCategoryById(Long id){
-        log.info("删除分类,{}",id);
+    public Result<String> deleteCategoryById(Long id) {
+        log.info("删除分类,{}", id);
         categoryService.deleteCategoryById(id);
         return Result.success();
     }

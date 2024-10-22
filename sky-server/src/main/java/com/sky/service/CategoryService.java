@@ -12,7 +12,7 @@ public interface CategoryService {
     PageResult getCategoryPage(CategoryPageQueryDTO categoryPageQueryDTO);
 
     void startOrStop(Integer status, Long id);
-
+ 
     void addCategory(CategoryDTO categoryDTO);
 
     void updateCategory(CategoryDTO categoryDTO);

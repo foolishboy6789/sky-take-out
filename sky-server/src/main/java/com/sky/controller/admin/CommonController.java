@@ -1,7 +1,6 @@
 package com.sky.controller.admin;
 
 
-import com.sky.annotation.AutoFill;
 import com.sky.result.Result;
 import com.sky.service.CommonService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,8 @@ public class CommonController {
     private CommonService commonService;
 
     @RequestMapping("/upload")
-    public Result<String> upload(MultipartFile file){
-        log.info("文件上传：{}",file);
+    public Result<String> upload(MultipartFile file) {
+        log.info("文件上传：{}", file);
         String url = commonService.upload(file);
         return Result.success(url);
     }

@@ -28,9 +28,9 @@ public class CommonServiceImpl implements CommonService {
             String fileName = fileDir + UUID.randomUUID().toString() + fileType;
             return aliOssUtil.upload(file.getBytes(), fileName);
         } catch (Exception e) {
-            if (e instanceof IndexOutOfBoundsException){
+            if (e instanceof IndexOutOfBoundsException) {
                 throw new BaseException("文件格式不正确");
-            }else{
+            } else {
                 throw new BaseException("文件上传失败");
             }
         }

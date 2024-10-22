@@ -19,13 +19,11 @@ import com.sky.mapper.EmployeeMapper;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
-import com.sky.utils.JwtUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -76,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void addEmployee(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
@@ -86,9 +84,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public PageResult getEmployeePage(EmployeePageQueryDTO employeePageQueryDTO) {
-        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
         Page<Employee> employeePage = (Page<Employee>) employeeMapper.getEmployeePage(employeePageQueryDTO);
-        return new PageResult(employeePage.getTotal(),employeePage.getResult());
+        return new PageResult(employeePage.getTotal(), employeePage.getResult());
     }
 
     @Override
@@ -108,27 +106,27 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void updateEmp(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         employeeMapper.update(employee);
     }
 
     @Override
     public void editPassword(PasswordEditDTO passwordEditDTO) {
-        if(passwordEditDTO.getEmpId()==null)
+        if (passwordEditDTO.getEmpId() == null)
             passwordEditDTO.setEmpId(BaseContext.getCurrentId());
         String md5OldPwd = DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes());
         String md5NewPwd = DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes());
         String Pwd = employeeMapper.getPwdById(passwordEditDTO.getEmpId());
-        if(!Pwd.equals(md5OldPwd)){
+        if (!Pwd.equals(md5OldPwd)) {
             throw new PasswordEditFailedException(MessageConstant.PASSWORD_EDIT_FAILED);
         }
-        if(Pwd.equals(md5NewPwd)){
+        if (Pwd.equals(md5NewPwd)) {
             throw new PasswordEditFailedException(MessageConstant.PASSWORD_MULTI);
         }
         Employee emp = Employee.builder()
-                               .id(passwordEditDTO.getEmpId())
-                               .password(md5NewPwd).build();
+                .id(passwordEditDTO.getEmpId())
+                .password(md5NewPwd).build();
 
         employeeMapper.update(emp);
     }

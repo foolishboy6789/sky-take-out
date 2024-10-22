@@ -28,20 +28,20 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public PageResult getDishPage(DishPageQueryDTO dishPageQueryDTO) {
-        PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
+        PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         Page<Dish> page = (Page<Dish>) dishMapper.getDishPage(dishPageQueryDTO);
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     @Override
     @Transactional
     public void addDishWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        BeanUtils.copyProperties(dishDTO, dish);
         dishMapper.addDish(dish);
         Long id = dish.getId();
         List<DishFlavor> flavors = dishDTO.getFlavors();
-        if(flavors!=null && !flavors.isEmpty()){
+        if (flavors != null && !flavors.isEmpty()) {
             for (DishFlavor flavor : flavors) {
                 flavor.setDishId(id);
                 dishFlavorMapper.addDishFlavor(flavor);

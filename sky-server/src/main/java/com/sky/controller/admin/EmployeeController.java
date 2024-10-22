@@ -14,10 +14,8 @@ import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,53 +73,51 @@ public class EmployeeController {
     }
 
     /**
-     *
      * @param employeeDTO
      * @return
      */
     @PostMapping
-    public Result<String> addEmployee(@RequestBody EmployeeDTO employeeDTO){
-        log.info("新增员工,{}",employeeDTO);
+    public Result<String> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("新增员工,{}", employeeDTO);
         employeeService.addEmployee(employeeDTO);
         return Result.success();
     }
 
     /**
-     *
      * @param employeePageQueryDTO
      * @return
      */
     @GetMapping("/page")
-    public Result<PageResult> getEmployeePage(EmployeePageQueryDTO employeePageQueryDTO){
-        log.info("分页查询,{}",employeePageQueryDTO);
+    public Result<PageResult> getEmployeePage(EmployeePageQueryDTO employeePageQueryDTO) {
+        log.info("分页查询,{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.getEmployeePage(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 
     @PostMapping("/status/{status}")
-    public Result<String> startOrStop(@PathVariable Integer status,Long id){
-        log.info("启用禁用员工,{},{}",status,id);
-        employeeService.startOrStop(status,id);
+    public Result<String> startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用禁用员工,{},{}", status, id);
+        employeeService.startOrStop(status, id);
         return Result.success();
     }
 
     @GetMapping("/{id}")
-    public Result<Employee> getEmpById(@PathVariable Long id){
-        log.info("根据id查询员工,{}",id);
+    public Result<Employee> getEmpById(@PathVariable Long id) {
+        log.info("根据id查询员工,{}", id);
         Employee emp = employeeService.getEmpById(id);
         return Result.success(emp);
     }
 
     @PutMapping
-    public Result<String> updateEmp(@RequestBody EmployeeDTO employeeDTO){
-        log.info("修改员工,{}",employeeDTO);
+    public Result<String> updateEmp(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("修改员工,{}", employeeDTO);
         employeeService.updateEmp(employeeDTO);
         return Result.success();
     }
 
     @PutMapping("/editPassword")
-    public Result<String> editPwd(@RequestBody PasswordEditDTO passwordEditDTO){
-        log.info("修改密码,{}",passwordEditDTO);
+    public Result<String> editPwd(@RequestBody PasswordEditDTO passwordEditDTO) {
+        log.info("修改密码,{}", passwordEditDTO);
         employeeService.editPassword(passwordEditDTO);
         return Result.success();
     }
