@@ -35,4 +35,8 @@ public interface DishMapper {
     void update(Dish dish);
 
     void deleteDishByIds(List<Long> ids);
+
+
+    @Select("select * from dish where category_id=#{categoryId} and status = 1 order by update_time desc")
+    List<Dish> getDishList(Long categoryId);
 }

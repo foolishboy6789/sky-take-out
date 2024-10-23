@@ -19,7 +19,7 @@ public interface EmployeeMapper {
      * @param username
      * @return
      */
-    @Select("select * from employee where username = #{username}")
+    @Select("select * from employee where username = #{username} order by update_time desc")
     Employee getByUsername(String username);
 
 
