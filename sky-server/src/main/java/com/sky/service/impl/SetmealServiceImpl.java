@@ -53,6 +53,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @Transactional
     public SetmealVO getSetmealWithDishById(Long id) {
         SetmealVO setmealVO = new SetmealVO();
         Setmeal setmeal = setmealMapper.getSetmealById(id);
@@ -71,6 +72,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @Transactional
     public void updateSetmeal(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
