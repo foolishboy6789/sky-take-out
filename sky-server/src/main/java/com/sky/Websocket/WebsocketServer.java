@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebsocketServer {
     private static final Map<String, Session> seesionMap = new ConcurrentHashMap<>();
 
-    private static void sendToAllClient(String message) {
+    public void sendToAllClient(String message) {
         for (Session session : seesionMap.values()) {
             try {
                 session.getBasicRemote().sendText(message);

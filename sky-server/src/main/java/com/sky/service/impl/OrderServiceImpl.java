@@ -1,7 +1,9 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.Websocket.WebsocketServer;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.*;
@@ -42,6 +44,8 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private OrderDetailMapper orderDetailMapper;
+    @Autowired
+    private WebsocketServer websocketServer;
 
     @Override
     @Transactional
@@ -106,6 +110,12 @@ public class OrderServiceImpl implements OrderService {
         orders.setPayStatus(Orders.PAID);
         orders.setStatus(Orders.TO_BE_CONFIRMED);
         orderMapper.update(orders);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", 1);
+        jsonObject.put("orderId", orders.getId());
+        jsonObject.put("content", "订单号" + orders.getNumber());
+        websocketServer.sendToAllClient(jsonObject.toJSONString());
     }
 
     /**

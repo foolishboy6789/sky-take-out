@@ -1,6 +1,7 @@
 package com.sky.task;
 
 
+import com.sky.Websocket.WebsocketServer;
 import com.sky.constant.MessageConstant;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -18,6 +20,8 @@ public class OrderTask {
 
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private WebsocketServer websocketServer;
 
     @Scheduled(cron = "0 * * * * ?")
     public void checkOrderStatus() {
@@ -51,5 +55,11 @@ public class OrderTask {
                 orderMapper.update(orders);
             }
         }
+    }
+
+    // @Scheduled(cron = "0/5 * * * * ?")
+    public void WebsocketTest() {
+        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        websocketServer.sendToAllClient(time);
     }
 }
