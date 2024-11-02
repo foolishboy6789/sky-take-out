@@ -57,15 +57,22 @@ public class OrderController {
 
     @PutMapping("/cancel/{id}")
     public Result<String> cancel(@PathVariable Long id) {
-        log.info("用户取消订单，订单号:{}", id);
+        log.info("用户取消订单，订单id:{}", id);
         orderService.userCancelById(id);
         return Result.success();
     }
 
     @PostMapping("repetition/{id}")
     public Result<String> repetition(@PathVariable Long id) {
-        log.info("用户重复下单，订单号:{}", id);
+        log.info("用户重复下单，订单id:{}", id);
         orderService.repetition(id);
+        return Result.success();
+    }
+
+    @GetMapping("/reminder/{id}")
+    public Result<String> reminder(@PathVariable Long id) {
+        log.info("订单提醒，订单id:{}", id);
+        orderService.reminder(id);
         return Result.success();
     }
 }

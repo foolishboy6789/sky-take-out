@@ -266,6 +266,17 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.update(orders);
     }
 
+    @Override
+    public void reminder(Long id) {
+        Orders orders = orderMapper.selectById(id);
+        JSONObject jsonObject = new JSONObject();
+        // 1为来单提醒,2为催单提醒
+        jsonObject.put("type", 2);
+        jsonObject.put("orderId", orders.getId());
+        jsonObject.put("content", "订单号" + orders.getNumber());
+        websocketServer.sendToAllClient(jsonObject.toJSONString());
+    }
+
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
         // 需要返回订单菜品信息，自定义OrderVO响应结果
         List<OrderVO> orderVOList = new ArrayList<>();
