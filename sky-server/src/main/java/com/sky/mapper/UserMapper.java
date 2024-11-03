@@ -5,6 +5,8 @@ import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+
 @Mapper
 public interface UserMapper {
 
@@ -12,4 +14,6 @@ public interface UserMapper {
     User getUserByOpenid(String openid);
 
     void insert(User user);
+
+    Integer sumUsers(LocalDateTime beginTime, LocalDateTime endTime);
 }

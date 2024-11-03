@@ -78,4 +78,36 @@
         </where>
         order by order_time desc
     </select>
+    <select id="sumOrders" resultType="java.lang.Integer">
+        select count(id) from orders
+        <where>
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="top10" resultType="com.sky.entity.OrderDetail">
+        select sum(number) as number, name
+        from order_detail
+        where order_id in
+        (select id from orders
+        <where>
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+        </where>
+        )
+        group by name
+        order by number desc
+        limit 10
+    </select>
 </mapper>
